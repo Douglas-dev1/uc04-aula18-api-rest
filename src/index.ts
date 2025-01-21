@@ -135,7 +135,27 @@ app.get("/pedidos/:id/status", (req: Request, res: Response) => {
 });
 
 // PATCH /pedidos/id -> endereço entrega
+app.patch("/pedidos/:id", (req: Request, res: Response) => {
+    // Recupero o id do pedido na requisição
+    const { id } = req.params;
 
+    // converto o id que é string para um número inteiro
+    const id_pedido = parseInt(id, 10);
+
+    const {endereco} = req.body
+
+    for(const p of pedidos){
+      if(p.id === id_pedido){
+        if(!endereco || p.endereco === endereco){
+          res.status(400).send({error: "Endereço inválido."});
+          return;
+        }
+        p.endereco = endereco;
+        res.send(p)
+        break;
+      }
+    }
+})
 // PUT /pedidos/id -> alterar o lanche
 
 // DELETE /pedidos/id -> cancelar um pedido
